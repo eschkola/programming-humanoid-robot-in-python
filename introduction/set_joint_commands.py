@@ -22,7 +22,7 @@ class MyAgent(SparkAgent):
         action = super(MyAgent, self).think(perception)
         # YOUR CODE HERE
         action.stiffness['LShoulderPitch'] = 0
-        action.speed['HeadYaw'] = 0
+        action.speed['HeadYaw'] = 0.1
 
         return action
 
