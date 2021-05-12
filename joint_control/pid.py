@@ -34,10 +34,10 @@ class PIDController(object):
         self.e1 = np.zeros(size)
         self.e2 = np.zeros(size)
         # ADJUST PARAMETERS BELOW
-        delay = 0
-        self.Kp = 0
-        self.Ki = 0
-        self.Kd = 0
+        delay = 4
+        self.Kp = 62
+        self.Ki = -0.1
+        self.Kd = 0.3
         self.y = deque(np.zeros(size), maxlen=delay + 1)
 
     def set_delay(self, delay):
@@ -55,7 +55,7 @@ class PIDController(object):
         # YOUR CODE HERE
         trackingError = target - sensor
 
-        a = self.Kp + (Ki * self.dt) + (self.Kd / self.dt)
+        a = self.Kp + (self.Ki * self.dt) + (self.Kd / self.dt)
         b = self.Kp + (2 * self.Kd /self.dt)
         c = self.Kd / self.dt
 
@@ -64,6 +64,9 @@ class PIDController(object):
         # shift error to next "position"
         self.e2 = self.e1
         self.e1 = trackingError
+
+        oldY =  self.y.popleft()
+
 
         return self.u
 
