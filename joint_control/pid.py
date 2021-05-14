@@ -34,10 +34,10 @@ class PIDController(object):
         self.e1 = np.zeros(size)
         self.e2 = np.zeros(size)
         # ADJUST PARAMETERS BELOW
-        delay = 4
-        self.Kp = 62
-        self.Ki = -0.1
-        self.Kd = 0.3
+        delay = 0
+        self.Kp = 0
+        self.Ki = 0
+        self.Kd = 0
         self.y = deque(np.zeros(size), maxlen=delay + 1)
 
     def set_delay(self, delay):
@@ -66,6 +66,10 @@ class PIDController(object):
         self.e1 = trackingError
 
         oldY =  self.y.popleft()
+
+        speed = ((self.u - sensor) + (oldY - sensor)) / (2 * self.dt)
+        predicted = self.u + speed * self.dt
+        self.y.append(predicted)
 
 
         return self.u
