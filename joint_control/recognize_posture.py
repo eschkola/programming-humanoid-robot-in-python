@@ -13,6 +13,8 @@
 from angle_interpolation import AngleInterpolationAgent
 from keyframes import hello
 import pickle
+import numpy as np
+from os import listdir
 
 
 class PostureRecognitionAgent(AngleInterpolationAgent):
@@ -32,8 +34,19 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
     def recognize_posture(self, perception):
         posture = 'unknown'
         # YOUR CODE HERE
+        features = ['LHipYawPitch', 'LHipRoll', 'LHipPitch', 'LKneePitch', 'RHipYawPitch', 'RHipRoll', 'RHipPitch', 'RKneePitch', 'AngleX', 'AngleY']
+    
+        postures = []
+    
+        for feature in features:
+            postures.append(perception.joint[feature])
+            
+        postures.append(perception.imu[0])
+        postures.append(perception.imu[1])
         
-
+        posture = listdir('robot_pose_data')[self.posture_classifier.predict(np.array(postures).reshape(1,-1))[0]]
+        
+    
         return posture
 
 if __name__ == '__main__':
