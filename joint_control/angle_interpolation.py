@@ -26,7 +26,6 @@ from keyframes import leftBackToStand
 from scipy import interpolate
 import numpy as np
 from scipy.interpolate import BSpline
-import standing_up
 
 
 class AngleInterpolationAgent(PIDAgent):
