@@ -79,7 +79,7 @@ class AngleInterpolationAgent(PIDAgent):
 
             if(joint_times[0] <= actual_time <= joint_times[-1]):
                 
-                # original idea: spline with scipy
+                # original idea: spline with scipy-interpolate
                 f = interpolate.splrep(joint_times, first_items)
                 target_joints[name] = interpolate.splev(actual_time, f)
                 
