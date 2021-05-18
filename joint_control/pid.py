@@ -35,9 +35,9 @@ class PIDController(object):
         self.e2 = np.zeros(size)
         # ADJUST PARAMETERS BELOW
         delay = 0
-        self.Kp = 0
-        self.Ki = 0
-        self.Kd = 0
+        self.Kp = 7
+        self.Ki = 0.2
+        self.Kd = 0.4
         self.y = deque(np.zeros(size), maxlen=delay + 1)
 
     def set_delay(self, delay):
@@ -53,26 +53,27 @@ class PIDController(object):
         @return control signal
         '''
         # YOUR CODE HERE
-        trackingError = target - sensor
+        e0 = target - sensor
 
-        a = self.Kp + (self.Ki * self.dt) + (self.Kd / self.dt)
-        b = self.Kp + (2 * self.Kd /self.dt)
-        c = self.Kd / self.dt
+        p = (self.Kp + self.Ki * self.dt + self.Kd / self.dt) * e0
+        i = (self.Kp + (2 * self.Kd / self.dt)) * self.e1
+        d = self.Kd / self.dt * self.e2
 
-        self.u = self.u + a * trackingError - b * self.e1 + c * self.e2
+        self.u = self.u + p - i + d
 
-        # shift error to next "position"
         self.e2 = self.e1
-        self.e1 = trackingError
-
+        self.e1 = e0
+        
         oldY =  self.y.popleft()
 
         speed = ((self.u - sensor) + (oldY - sensor)) / (2 * self.dt)
         predicted = self.u + speed * self.dt
+        
         self.y.append(predicted)
 
 
         return self.u
+
 
 
 class PIDAgent(SparkAgent):
